@@ -1,7 +1,13 @@
+Note about licensing:
+This is to clarify intention in cases of confusion regarding the selection of the LGPL 2.1 for this project. My (Jonathan George) intention as creator of this project is that the following be true.
+1. All of my *public* contributions are dual licensed to myself and LGPL for public use.
+2. Anyone should be able to use this code unmodified from the public source for any use commercial or otherwise, but any modification must be shared in full.
+3. Adding new source files, linking to, duplicating, or aggregating does NOT constitute modifying from a license standpoint. Your private or commercial application code belongs to you except when it involves modifying this code.
+In summary: This is a collaborative project, but including it within your own project shouldn't give anyone the right to limit your own rights to your own code even if you choose to keep your own code private except for code that you modify.
+
 Here is the initial thought experiment/specification. Technically there are two specs here. The first (newer) specification is for an upgrade to the C language and the second was intended to be a completely new language. It has not been cleaned up, clarified, or completed for public consumption, but perhaps you will get the thrust of it. The basic idea is to "fix" C by adding two types of native dynamic containers (array and map types), adding native application library features for network, event, and thread managed applications, and fixing language mis-features and incomplete features while remaining a functional language rather than a data object language.
  
 I also want to explore the idea that polymorphic OO was a mistake which looks much better in theory than in real life.
- 
 
 ------------------------------------------------------------------------------
 Cng - pronounced See Engine - meaning C next generation
