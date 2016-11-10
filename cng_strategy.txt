@@ -1,0 +1,217 @@
+Here is the initial though experiment/specification. Technically there are two specs here. The first (newer) specification is for an upgrade to the C language and the second was intended to be a completely new language. It has not been cleaned up, clarified, or completed for public consumption, but perhaps you will get the thrust of it. The basic idea is to "fix" C by adding two types of native dynamic containers (array and map types), adding native application library features for network, event, and thread managed applications, and fixing language mis-features and incomplete features while remaining a functional language rather than a data object language.
+ 
+I also want to explore the idea that polymorphic OO was a mistake which looks much better in theory than in real life.
+ 
+
+------------------------------------------------------------------------------
+Cng - pronounced See Engine - meaning C next generation
+------------------------------------------------------------------------------
+Major features
+• Native typed containers with intrinsic notation
+    ∘ array [initial suffix pad:increment suffix pad]
+        ‣ alt [initial prefix,suffix:increment prefix,suffix]
+    ∘ map [map(key), initial:increment]
+    ∘ operations (manipulators)
+        ‣ insert - operator @var[position] +=
+        ‣ extract - operator @var[position] -=
+        ‣ copy - operator @var[position] =
+        ‣ set - operator @var[position] =
+    ∘ operations (comparisons)
+        ‣ append (if not in array) $+=
+        ‣ extract (if in array) -=$
+        ‣ copy (if in array) =$ ... is this useful?
+        ‣ find if in array $== or ==$
+        ‣ find if not in array $!= or =!$
+    ∘ operations (other)
+        ‣ format
+        ‣ sort
+        ‣ foreach
+        ‣ tune preallocation
+    ∘ inline allocation via { }
+    ∘ non-null terminated strings created via `value`
+• Application solution libraries
+        ‣ new supporting compiler features as needed
+    ∘ Networking (server and client)
+    ∘ Data storage
+    ∘ Threading
+    ∘ GUI
+    ∘ Security
+• Locking/Lockless?
+• Multiple return values
+• finish tag for actions on function exit?
+    ∘ need to consider ordering
+    ∘ Goal: release resources allocated so far
+    ∘ address "catch/exceptions" use case
+• State?
+• Implicit context
+    ∘ automatic deref
+        ‣ expose struct_instance
+        ‣ .field to reference
+    ∘ Auto reuse last missing conditional result in same evaluation context
+        ‣ (1 == (a + 1) || 2 == . && b <= .)
+        ‣  1 == (a+1) || 2 == (a+1) && b < (a + 1)
+        ‣ implicit value is only evaluated once.
+• Logging?
+• Auto-threads?
+    ∘ tagged functions starting new thread
+• No overloading/overriding
+• Smart enums
+    ∘ automatic array where needed
+    ∘ scope constraints
+    ∘ redefinable values?
+• Undo mis-features and limits
+    ∘ cases( value_a ) {
+        ‣ case b2a(value_b-1):
+        ‣ implied "{ }" around case body
+        ‣ implied break; before case :
+        ‣ explicit "fall" after case :
+    ∘ Default arguments intermediate via ,,
+    ∘ Improved variable arguments
+        ‣ nextarg(short)
+        ‣ no setup or cleanup requirement
+• Global build (eliminate header requirements/linking)
+• Use Cases
+    ∘ Circular queue
+        ‣ like: value+=limit,[increment[,wrap value]]
+• guaranteed word sizes (and abbreviations)
+    ∘ ddouble = 128bit
+    ∘ llong/ullong/double = 64bit
+    ∘ long/ulong/float = 32bit
+    ∘ int/uint = 32bit
+    ∘ short/ushort = 16bit
+    ∘ char/uchar = 8bit
+• no cast warnings for lossless promotions
+• required cast warnings for lossy conversions
+• implicit parameter or return are explicitly void
+
+ 
+
+------------------------------------------------------------------------------
+New Lang
+------------------------------------------------------------------------------
+
+• Rule#1 All enhancements should have a realistic common use case which results in simpler, cleaner, shorter and more obvious code for all realistic uses.
+
+• Rule#2 Syntax should remain semantically obvious, simple, and clean. If it's confusing or ambiguous it should be changed or eliminated.
+
+• Rule#3 Compatibility with legacy code should be explicitly broken if Rule #1 and Rule #2 can be better serviced in this way.
+
+• Rule#4 All enhancements should be driven by both high and low level use cases.
+
+• Rule#5 Review solutions from other systems/languages before finalizing an implementation (Python, Ruby, PERL, AWK, GO, DBase, Basic, C#, Objective-C, Ada, Snobal, Modula, Fortran, PL/1, Forth
+-------------------------------------------
+missing arguments use default value (ergo 1, 2,,4)
+temp stack based structs/unions
+    (struct x) {1, 2, 3, 4}
+    automatic typing for parameters and return values
+• warnings should become errors per best practices
+• standard package should include all core features
+• loop else logic (it never matched in the first place)
+    while( a < b ) {
+        print a, b
+    } else {
+        print "a >= b"
+    }
+• semi colon implied?
+    If next non-whitespace/comment can continue statement it does.
+• remembered/implied LHS argument (per nested scope)
+    For aggregates (retain value - don't re-evaluate)
+        print person[person_c].first " " .last "\n" .ssn " " .dob
+    For evaluation
+        if( person[person_c].age > 50 || < 28 )
+            print "Age discrimination @ " .age " for " .name
+    This also has optimization advantages in eliminating unnecessary or even incorrect re-evaluation
+• exception handling?
+    perhaps just local to current function?
+    goal to provide a clean goto cleanup/unwind type functionality
+• multiple return values
+    data, status = read( fd, size, RD_BLOCKING )
+inline structs to extend (like inheritance)
+    struct a { int a }; struct b { int b; @struct a; };
+strings
+    can variable arrays of char serve?
+• variable arrays/hash maps/ maybe lists and/or queues
+    map[] int[string] age[] = { 25["Pat"], 21["Chi"] }
+    age[++] = 27["Sage"]
+    print age["Jane"], age[].count or countof age
+    print .key .value
+• switch on any condition/type
+    perhaps break should be implied & fall through explicit?
+• multiple tests against one value
+    if( (a ==1 || ==2 || ==3) && (b >= 0 && <= 12) )
+• automatic inline arrays
+    could be used for multi value test
+    if( a ==||{1, 2, 3} ) // if a is any of
+    if( b !=&&{1,2,3} ) // if b is not any of
+• enums
+    allow any type for assigned value
+    require instance reference instead of being global name space
+    note: need to think this through... obviated by hash map?
+• serialization support...?
+    assign descriptors to data
+    automatic serialization (endian safe)
+• namespace/object+class/package ??
+    I'm leaning toward package only.
+    this-> is a nice implicit argument concept, but I think it can be generalized a simpler and more flexible way
+    static would be package scope rather than file scope
+    all other data/functions would be global/extern
+• implicit arguments
+    labeled?
+• default values
+• data initialization
+    implicit null unless explicit otherwise... or maybe explicit required but allow =0 shortcut for bulk data
+• smart casting/conversion
+    From text to binary & vis versa?
+    string x = "89a";int y = string2int(x, 16);
+    char a[] = "123";int b = char a2int(a);
+    Is there a "good" case for user overloading?
+    hex2int() implicitly knows how to handle a char[] vs string and stack vs heap? remember: heap sizes are always known.
+• data copying
+    eliminate memcpy/memmove?
+• information recovery
+    size, type
+• formatted printing
+• formatted reading
+• records
+• database
+    automatic transformation; SQL types should seem native
+    natural transaction support
+• socket management
+• event management
+• GUI management
+• Device interfacing
+    Graphics
+    Serial/USB
+    Network
+    HID
+• threads
+    callbacks?
+• state machine support?
+• global linking
+    eliminate prototypes
+    improve optimization
+    eliminate name ordering issues
+• mapped i/o
+• bounds management
+• bit manipulation
+• math
+    floating point should be easy
+    integration should be easy
+• smart heap/allocators
+    - call allocation function with result assigned to stack variable which automatically releases allocated data when stack scope is exited.
+     - heap pointer data explicitly returned is not deallocated until the lifetime of the return value goes out of scope
+    - automatic copy when returning local stack allocated data
+    - recursive free for sub-allocations
+    - detect properties of allocation
+        is stack/heap; size; freed?
+• better stack management
+• locking (and lock-less support)
+• parallel support
+• shared memory support
+• messaging support
+• log levels/management/targeting
+• consider embedded code
+    minimize footprint
+• can it be used for kernel programming?
+• can it be used for system programming?
+• can link compatibility with C be maintained
