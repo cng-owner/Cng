@@ -90,15 +90,11 @@ Major features
 New Lang
 ------------------------------------------------------------------------------
 
-• Rule#1 All enhancements should have a realistic common use case which results in simpler, cleaner, shorter and more obvious code for all realistic uses.
-
-• Rule#2 Syntax should remain semantically obvious, simple, and clean. If it's confusing or ambiguous it should be changed or eliminated.
-
-• Rule#3 Compatibility with legacy code should be explicitly broken if Rule #1 and Rule #2 can be better serviced in this way.
-
-• Rule#4 All enhancements should be driven by both high and low level use cases.
-
-• Rule#5 Review solutions from other systems/languages before finalizing an implementation (Python, Ruby, PERL, AWK, GO, DBase, Basic, C#, Objective-C, Ada, Snobal, Modula, Fortran, PL/1, Forth
+• All enhancements should have a realistic common use case which results in simpler, cleaner, shorter and more obvious code for all realistic uses.
+• Syntax should remain semantically obvious, simple, and clean. If it's confusing or ambiguous it should be changed or eliminated.
+• Compatibility with legacy code should be explicitly broken if Rule #1 and Rule #2 can be better serviced in this way.
+• All enhancements should be driven by both high and low level use cases.
+• Review solutions from other systems/languages before finalizing an implementation (Python, Ruby, PERL, AWK, GO, DBase, Basic, C#, Objective-C, Ada, Snobal, Modula, Fortran, PL/1, Forth
 -------------------------------------------
 missing arguments use default value (ergo 1, 2,,4)
 temp stack based structs/unions
