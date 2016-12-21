@@ -14,12 +14,54 @@ Cng - pronounced See Engine - meaning C next generation
 ------------------------------------------------------------------------------
 Major features
 • Native typed containers with intrinsic notation
-    ∘ array [initial suffix pad:increment suffix pad]
+    ∘ NOTE: Initially additional data types were considered including
+				(lists, queues, stacks, heaps, trees, etc.), but concluded that
+				the array and map types could be optimized for most common use
+				cases for both space and performance on practially all common
+				hardware produced since the advent of 32 bit microprocessors.
+				There are a few use cases remaining for specialized advanced
+				processing of trees, but with other enhancements and possible
+				advanced core library support it seemed that those would add
+				unnecessary complexity to the language intrinsics.
+    ∘ array [initial suffix:increment suffix]
         ‣ alt [initial prefix,suffix:increment prefix,suffix]
+        ‣ NOTE: - The allocations are deterministic, but exist for optimization
+				of resource allocation only. Use of only : allocation as in the
+				first example will result in minimum allocation and allocations
+				should generally only be used when performing hand optimization.
+				- Colon arrays always consist of a pointer with the location
+				with the existance of size tracking being non-deterministic.
+				This is because there are cases where size might be inferable
+				by the compiler without any runtime storing of the size.
+        ‣ EXAMPLES:
+			- char a1[:];
+				// empty dynamic array "a1"
+			- char a2[:] = "Bill";
+				// dynamic array "a2" with 4 chars "Bill"
+			- char a3[4:];
+				// empty dynamic array "a3" pre-allocated for 4 chars
+			- char a4[4:] = "Bill";
+				// dynamic array "a4" with 4 chars "Bill" followed by a pre-
+				// allocation of 4 additional chars (suffix)
     ∘ map [map(key), initial:increment]
     ∘ operations (manipulators)
-        ‣ insert - operator @var[position] +=
-        ‣ extract - operator @var[position] -=
+        ‣ insert - operator var@[position] +=
+			EXAMPLES:
+				- a2@[2] += "d sme";
+					// dynamic array "a2" now contains "Bad smell"
+					// 5 more required chars are allocated before moving
+					// and copying the new data.
+					// For "a4" 1 more required char would be allocated.
+				- a2@[] += "&Ted"; // @[] means after existing data ergo append
+					// dynamic array "a2" now contains "Bill&Ted"
+					// 4 more required chars are allocated before copying data
+					// For "a4" the existing pre-allocation would be used.
+        ‣ extract - operator var@[position] -=
+			NOTE: Allocation is never reduced... only increased.
+			EXAMPLES:
+				- a4@[0] -= [1];
+					// dynamic array "a4" now contains "ill" followed by a pre-
+					// allocation of 5 additional characters (suffix)
         ‣ copy - operator @var[position] =
         ‣ set - operator @var[position] =
     ∘ operations (comparisons)
